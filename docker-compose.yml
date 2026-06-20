@@ -1,0 +1,23 @@
+
+version: '3.8'
+
+services:
+  # Frontend service for Copa do Mundo de Distros Linux
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: copa-distros-web
+    ports:
+      # Map port 3000 from container to localhost:3000
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:3000}
+    restart: unless-stopped
+    # Optional: Add healthcheck to ensure the service is running correctly
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
